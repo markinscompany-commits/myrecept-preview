@@ -802,8 +802,11 @@ function go(p){
   document.querySelectorAll('.hdr-nav a').forEach(a=>a.classList.remove('on'));
   const n=document.getElementById('n-'+p);if(n)n.classList.add('on');
   document.getElementById('ft').style.display=p==='admin'?'none':'';
+  if(location.hash!=='#'+p) history.pushState(null,null,'#'+p);
   setTimeout(initRv,100);
 }
+window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(h&&document.getElementById('p-'+h))go(h)});
+window.addEventListener('DOMContentLoaded',()=>{const h=location.hash.slice(1);if(h&&document.getElementById('p-'+h))go(h)});
 window.addEventListener('scroll',()=>{document.getElementById('hdr').classList.toggle('shadow',scrollY>40)},{passive:true});
 document.getElementById('mobTog').addEventListener('click',()=>{
   const nav=document.getElementById('mainNav');nav.classList.toggle('open');
