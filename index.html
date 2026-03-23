@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MY RECEPT — Кондитерский бутик</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --maroon:#6a3a43;--maroon-deep:#4d2a31;
+  --brown:#a98056;--brown-lt:#c9a87c;--brown-dk:#a77e56;
+  --rose:#bb6871;--rose-lt:#d4949b;--rose-pale:#f0d4d8;
+  --pink-bg:#fff3f5;--pink-lt:#fce4e4;--pink-blush:#fef9fa;
+  --beige:#f2ece6;--beige-dk:#e8e0d6;
+  --dark:#1b1c1d;--gray:#575a5b;--gray-lt:#959899;--gray-pale:#c0c1c1;
+  --white:#ffffff;
+  --display:'Cormorant Garamond','Georgia',serif;
+  --body:'Jost','Helvetica Neue',sans-serif;
+  --max:1148px;--gutter:clamp(1rem,3vw,2.5rem);
+  --ease:cubic-bezier(.22,1,.36,1);
+  --r:4px;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--body);color:var(--dark);background:var(--white);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* ═══ PAGES ═══ */
+.page{display:none}.page.on{display:block;animation:fadeIn .5s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.container{max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
+
+/* ═══ HEADER ═══ */
+.hdr{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--white);border-bottom:1px solid rgba(0,0,0,.04);transition:box-shadow .3s}
+.hdr.shadow{box-shadow:0 2px 20px rgba(0,0,0,.06)}
+.hdr-inner{max-width:var(--max);margin:0 auto;padding:.75rem var(--gutter);display:flex;align-items:center;justify-content:space-between}
+.hdr-logo{cursor:pointer;display:flex;align-items:center}
+.hdr-logo svg{height:32px;width:auto;transition:opacity .3s}
+.hdr-logo:hover svg{opacity:.7}
+
+.hdr-nav{display:flex;gap:2rem;list-style:none;align-items:center}
+.hdr-nav a{font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--brown-dk);text-decoration:none;cursor:pointer;position:relative;padding:.25rem 0;transition:color .3s}
+.hdr-nav a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--brown);transition:width .4s var(--ease)}
+.hdr-nav a:hover::after,.hdr-nav a.on::after{width:100%}
+
+.hdr-right{display:flex;align-items:center;gap:1rem}
+.hdr-tel{font-size:.7rem;color:var(--gray);text-decoration:none;transition:color .3s}
+.hdr-tel:hover{color:var(--brown)}
+
+.cart-btn{position:relative;width:36px;height:36px;border-radius:50%;border:1px solid var(--gray-pale);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.cart-btn:hover{border-color:var(--brown)}
+.cart-btn svg{width:18px;height:18px;stroke:var(--gray);stroke-width:1.5;fill:none}
+.cart-badge{position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:var(--rose);color:var(--white);font-size:.55rem;font-weight:600;display:flex;align-items:center;justify-content:center}
+
+.btn-adm{font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--brown);border:1px solid var(--brown);padding:.35rem .7rem;background:none;cursor:pointer;transition:all .3s;border-radius:2px;font-family:var(--body)}
+.btn-adm:hover{background:var(--brown);color:var(--white)}
+
+.mob-toggle{display:none;background:none;border:none;cursor:pointer;width:22px;height:14px;position:relative}
+.mob-toggle span{display:block;width:100%;height:1.5px;background:var(--maroon);position:absolute;left:0;transition:all .3s var(--ease)}
+.mob-toggle span:nth-child(1){top:0}.mob-toggle span:nth-child(2){top:50%;transform:translateY(-50%)}.mob-toggle span:nth-child(3){bottom:0}
+
+/* ═══ SHARED ═══ */
+.sec-label{font-size:.55rem;font-weight:500;letter-spacing:.4em;text-transform:uppercase;color:var(--brown);margin-bottom:.6rem;display:block}
+.sec-title{font-family:var(--display);font-size:clamp(1.6rem,3vw,2.4rem);font-weight:300;color:var(--maroon);line-height:1.2}
+.sec-line{width:28px;height:1px;background:var(--brown);margin:1rem auto 0}
+
+.breadcrumb{display:flex;align-items:center;gap:.4rem;font-size:.68rem;color:var(--gray-lt);padding:.75rem 0}
+.breadcrumb a{color:var(--gray-lt);text-decoration:none;cursor:pointer;transition:color .3s}
+.breadcrumb a:hover{color:var(--maroon)}
+.breadcrumb .sep{opacity:.3}
+.breadcrumb .cur{color:var(--maroon)}
+
+.btn{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--body);font-size:.6rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:.75rem 1.6rem;border:1px solid var(--maroon);color:var(--maroon);background:none;cursor:pointer;text-decoration:none;position:relative;overflow:hidden;transition:color .4s var(--ease);border-radius:2px}
+.btn::before{content:'';position:absolute;inset:0;background:var(--maroon);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease)}
+.btn:hover{color:var(--white)}.btn:hover::before{transform:scaleX(1)}
+.btn span{position:relative;z-index:1}
+.btn-fill{background:var(--rose);border-color:var(--rose);color:var(--white)}.btn-fill::before{background:var(--maroon)}
+.btn-sm{font-size:.55rem;padding:.55rem 1.1rem}
+.btn-brown{border-color:var(--brown);color:var(--brown)}.btn-brown::before{background:var(--brown)}
+.btn-round{border-radius:100px;border-color:var(--pink-lt);background:var(--pink-lt);color:var(--maroon)}.btn-round::before{background:var(--rose)}
+
+/* ═══ HERO ═══ */
+.hero{position:relative;min-height:100vh;overflow:hidden;background:var(--dark)}
+.hero-img{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=1600&q=80') center/cover;opacity:.45;transition:transform 8s linear}
+.hero:hover .hero-img{transform:scale(1.03)}
+.hero-gradient{position:absolute;inset:0;background:linear-gradient(135deg,rgba(27,28,29,.85) 0%,rgba(106,58,67,.5) 50%,rgba(27,28,29,.7) 100%)}
+.hero-content{position:relative;z-index:2;max-width:var(--max);margin:0 auto;padding:0 var(--gutter);min-height:100vh;display:flex;align-items:center}
+.hero-text{max-width:560px;padding:8rem 0 4rem}
+.hero-eyebrow{display:flex;align-items:center;gap:.75rem;margin-bottom:2rem;opacity:0;animation:hIn .8s .3s var(--ease) forwards}
+.hero-eyebrow .line{width:28px;height:1px;background:var(--brown)}
+.hero-eyebrow .txt{font-size:.55rem;letter-spacing:.4em;text-transform:uppercase;color:var(--brown-lt)}
+.hero h1{font-family:var(--display);font-size:clamp(2.5rem,5vw,4rem);font-weight:300;color:var(--white);line-height:1.15;margin-bottom:1.25rem;opacity:0;animation:hSlide .9s .5s var(--ease) forwards}
+.hero h1 em{font-style:italic;color:var(--rose-lt)}
+.hero-desc{font-size:.88rem;font-weight:300;color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:2rem;max-width:400px;opacity:0;animation:hIn .8s .7s var(--ease) forwards}
+.hero-btns{display:flex;gap:.75rem;flex-wrap:wrap;opacity:0;animation:hIn .8s .9s var(--ease) forwards}
+.hero-btns .btn{border-color:rgba(255,255,255,.3);color:var(--white)}
+.hero-btns .btn::before{background:var(--white)}
+.hero-btns .btn:hover{color:var(--dark)}
+.hero-btns .btn-accent{border-color:var(--brown);color:var(--brown-lt)}
+.hero-btns .btn-accent::before{background:var(--brown)}
+.hero-btns .btn-accent:hover{color:var(--white)}
+
+/* Hero side cards */
+.hero-cards{position:absolute;right:clamp(2rem,8vw,10rem);top:50%;transform:translateY(-50%);z-index:2;display:flex;flex-direction:column;gap:.75rem;opacity:0;animation:hIn .8s 1.1s var(--ease) forwards}
+.hero-mini{width:180px;height:100px;border-radius:var(--r);overflow:hidden;position:relative;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.3);transition:transform .4s var(--ease)}
+.hero-mini:hover{transform:scale(1.05) translateY(-4px)}
+.hero-mini img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.hero-mini:hover img{transform:scale(1.08)}
+.hero-mini .tag{position:absolute;bottom:.5rem;left:.6rem;font-size:.5rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--white);background:rgba(0,0,0,.45);backdrop-filter:blur(8px);padding:.2rem .5rem;border-radius:2px}
+
+.hero-scroll{position:absolute;bottom:2rem;left:var(--gutter);z-index:3;display:flex;align-items:center;gap:.6rem;opacity:0;animation:hIn .8s 1.3s var(--ease) forwards}
+.hero-scroll .t{font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.25)}
+.hero-scroll .l{width:32px;height:1px;background:linear-gradient(90deg,var(--brown-lt),transparent);animation:pulse 2s ease-in-out infinite}
+
+@keyframes hIn{from{opacity:0}to{opacity:1}}
+@keyframes hSlide{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ═══ MARQUEE ═══ */
+.marquee{background:var(--maroon);padding:.7rem 0;overflow:hidden;white-space:nowrap}
+.marquee-track{display:flex;gap:2rem;animation:slide 25s linear infinite}
+.marquee-item{font-family:var(--display);font-size:.78rem;font-weight:300;font-style:italic;color:rgba(255,255,255,.35);flex-shrink:0}
+.marquee-dot{width:3px;height:3px;border-radius:50%;background:var(--brown);opacity:.4;flex-shrink:0;align-self:center}
+@keyframes slide{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ═══ DIRECTIONS ═══ */
+.dirs{padding:4rem var(--gutter) 5rem;background:var(--pink-bg)}
+.dirs .section-header{text-align:center;margin-bottom:3rem}
+.dirs-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+
+.dir-card{position:relative;aspect-ratio:3/4;border-radius:var(--r);overflow:hidden;cursor:pointer;background:var(--white)}
+.dir-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
+.dir-card:hover img{transform:scale(1.05)}
+.dir-card-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.55) 100%);transition:background .4s}
+.dir-card:hover .dir-card-overlay{background:linear-gradient(180deg,rgba(106,58,67,.1) 0%,rgba(0,0,0,.6) 100%)}
+.dir-card-content{position:absolute;bottom:0;left:0;right:0;padding:1.5rem;z-index:2}
+.dir-card-num{font-family:var(--display);font-size:.7rem;color:var(--brown-lt);opacity:.7;margin-bottom:.25rem}
+.dir-card-title{font-family:var(--display);font-size:1.4rem;font-weight:400;color:var(--white);margin-bottom:.2rem}
+.dir-card-sub{font-size:.68rem;font-weight:300;color:rgba(255,255,255,.65);opacity:0;transform:translateY(4px);transition:all .4s var(--ease)}
+.dir-card:hover .dir-card-sub{opacity:1;transform:translateY(0)}
+.dir-card-badge{position:absolute;top:1rem;right:1rem;font-size:.45rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--brown);background:rgba(255,255,255,.85);backdrop-filter:blur(6px);padding:.2rem .5rem;border-radius:2px;z-index:3}
+.dir-card-arrow{position:absolute;bottom:1.5rem;right:1.5rem;opacity:0;transform:translateX(-6px);transition:all .3s .05s var(--ease);z-index:3;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--white);display:flex;align-items:center;gap:.4rem}
+.dir-card:hover .dir-card-arrow{opacity:.8;transform:translateX(0)}
+
+/* ═══ ABOUT STRIP ═══ */
+.about-strip{padding:5rem var(--gutter);background:var(--white)}
+.about-inner{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+.about-img{aspect-ratio:4/5;border-radius:var(--r);overflow:hidden}
+.about-img img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+.about-img:hover img{transform:scale(1.03)}
+.about-text h2{font-family:var(--display);font-size:clamp(1.5rem,2.5vw,2rem);font-weight:300;color:var(--maroon);line-height:1.3;margin-bottom:1.25rem}
+.about-text p{font-size:.85rem;font-weight:300;color:var(--gray);line-height:1.8;margin-bottom:1rem}
+
+/* ═══ STATS ═══ */
+.stats-bar{padding:3rem var(--gutter);background:var(--beige)}
+.stats-grid{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center}
+.stat-n{font-family:var(--display);font-size:1.8rem;font-weight:300;color:var(--maroon)}
+.stat-l{font-size:.6rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);line-height:1.5;margin-top:.15rem}
+
+/* ═══ QUOTE ═══ */
+.quote{padding:4rem var(--gutter);background:var(--maroon);text-align:center;position:relative;overflow:hidden}
+.quote::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(169,128,86,.1),transparent 60%)}
+.quote p{font-family:var(--display);font-size:clamp(1.2rem,2.2vw,1.7rem);font-weight:300;font-style:italic;color:rgba(255,255,255,.82);line-height:1.6;max-width:550px;margin:0 auto 1rem;position:relative}
+.quote .author{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--brown-lt)}
+
+/* ═══ PAGE: CATALOG (Cakes/Culinary) ═══ */
+.cat-hero{padding:6.5rem var(--gutter) 2rem;background:var(--pink-bg);text-align:center}
+.cat-hero h1{font-family:var(--display);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;color:var(--maroon);margin-bottom:.4rem}
+.cat-hero .tagline{font-size:.85rem;font-weight:300;color:var(--gray);max-width:420px;margin:0 auto;line-height:1.6}
+
+.catalog{padding:2rem var(--gutter) 4rem}
+.cat-filters{display:flex;justify-content:center;gap:.6rem;margin-bottom:2rem;flex-wrap:wrap}
+.cat-filter{font-family:var(--body);font-size:.62rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);background:none;border:1px solid transparent;padding:.45rem 1rem;cursor:pointer;border-radius:100px;transition:all .3s}
+.cat-filter:hover{color:var(--maroon);border-color:var(--pink-lt)}
+.cat-filter.on{color:var(--maroon);background:var(--pink-lt);border-color:var(--pink-lt)}
+
+/* Product grid — from Figma: 362x482 cards, 30px gap */
+.prod-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+
+.prod-card{background:var(--white);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:box-shadow .4s,transform .4s;border:1px solid rgba(0,0,0,.04)}
+.prod-card:hover{box-shadow:0 12px 40px rgba(106,58,67,.1);transform:translateY(-4px)}
+
+.prod-img{aspect-ratio:4/3;overflow:hidden;position:relative;background:var(--beige)}
+.prod-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.prod-card:hover .prod-img img{transform:scale(1.04)}
+.prod-img-dots{position:absolute;bottom:.5rem;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:2}
+.prod-img-dots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4)}
+.prod-img-dots span.on{background:var(--white)}
+
+.prod-body{padding:1.1rem}
+.prod-name{font-family:var(--display);font-size:1.15rem;font-weight:400;color:var(--brown);margin-bottom:.2rem}
+.prod-desc{font-size:.7rem;font-weight:300;color:var(--gray);line-height:1.5;margin-bottom:.6rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.prod-bottom{display:flex;justify-content:space-between;align-items:center}
+.prod-price{font-family:var(--display);font-size:1.1rem;font-weight:400;color:var(--brown)}
+.prod-price small{font-family:var(--body);font-size:.55rem;color:var(--gray-lt)}
+
+.add-btn{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--brown);background:none;color:var(--brown);font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.add-btn:hover{background:var(--brown);color:var(--white)}
+.add-btn.done{background:var(--rose);border-color:var(--rose);color:var(--white);animation:pop .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
+
+.show-more{text-align:center;margin-top:2rem}
+
+/* ═══ PAGE: PRODUCT DETAIL ═══ */
+.pd-wrap{padding:6rem var(--gutter) 3rem}
+.pd-layout{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+
+.pd-gallery{position:relative;aspect-ratio:4/5;border-radius:var(--r);overflow:hidden;background:var(--beige)}
+.pd-gallery img{width:100%;height:100%;object-fit:cover}
+.pd-gallery-dots{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.pd-gallery-dots span{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;transition:background .3s}
+.pd-gallery-dots span.on{background:var(--white)}
+
+.pd-info{padding-top:1rem}
+.pd-title{font-family:var(--display);font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:400;color:var(--maroon);margin-bottom:.5rem}
+.pd-price-row{display:flex;align-items:baseline;gap:.75rem;margin-bottom:1.25rem}
+.pd-price{font-family:var(--display);font-size:2rem;font-weight:400;color:var(--brown)}
+.pd-price-old{font-family:var(--display);font-size:1rem;color:var(--gray-lt);text-decoration:line-through}
+.pd-price-note{font-size:.65rem;color:var(--gray);font-style:italic}
+
+.pd-actions{display:flex;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap}
+
+.pd-tabs{display:flex;gap:0;border-bottom:1px solid rgba(0,0,0,.08);margin-bottom:1.25rem}
+.pd-tab{font-size:.65rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);padding:.6rem 1.2rem;background:none;border:none;cursor:pointer;position:relative;transition:color .3s}
+.pd-tab::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--brown);transform:scaleX(0);transition:transform .3s var(--ease)}
+.pd-tab.on{color:var(--maroon)}.pd-tab.on::after{transform:scaleX(1)}
+.pd-tab:hover{color:var(--maroon)}
+
+.pd-specs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1.5rem}
+.pd-spec{background:var(--beige);padding:.75rem;border-radius:var(--r)}
+.pd-spec-label{font-size:.55rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-lt);margin-bottom:.2rem}
+.pd-spec-val{font-family:var(--display);font-size:1rem;font-weight:400;color:var(--maroon)}
+
+.pd-desc-text{font-size:.8rem;font-weight:300;color:var(--gray);line-height:1.8}
+
+.pd-related{padding:2rem var(--gutter) 4rem}
+.pd-related h3{font-family:var(--display);font-size:1.3rem;font-weight:400;color:var(--maroon);text-align:center;margin-bottom:1.5rem}
+
+/* ═══ PAGE: RESTAURANTS ═══ */
+.rest-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.rest-card{position:relative;aspect-ratio:4/5;border-radius:var(--r);overflow:hidden;cursor:pointer}
+.rest-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
+.rest-card:hover img{transform:scale(1.05)}
+.rest-card-info{position:absolute;bottom:0;left:0;right:0;padding:3.5rem 1.25rem 1.25rem;background:linear-gradient(transparent,rgba(0,0,0,.55));z-index:2}
+.rest-card-name{font-family:var(--display);font-size:1.25rem;font-weight:400;color:var(--white);margin-bottom:.1rem}
+.rest-card-loc{font-size:.62rem;font-weight:300;color:rgba(255,255,255,.6);letter-spacing:.06em}
+.rest-overlay{position:absolute;inset:0;background:rgba(106,58,67,.85);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.6rem;opacity:0;transition:opacity .4s var(--ease);z-index:3}
+.rest-card:hover .rest-overlay{opacity:1}
+.rest-overlay .btn{width:160px;justify-content:center;border-color:var(--white);color:var(--white);font-size:.55rem}
+.rest-overlay .btn::before{background:var(--white)}
+.rest-overlay .btn:hover{color:var(--maroon)}
+.rest-overlay .site-lnk{font-size:.55rem;color:rgba(255,255,255,.45);text-decoration:none;letter-spacing:.08em;margin-top:.2rem;transition:color .3s}
+.rest-overlay .site-lnk:hover{color:var(--white)}
+
+/* ═══ PAGE: ABOUT ═══ */
+.about-hero{padding:8rem var(--gutter) 3rem;background:var(--dark);text-align:center;position:relative;overflow:hidden}
+.about-hero::before{content:'';position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1486427944544-d2c246c4df4e?w=1400&q=80') center/cover;opacity:.15}
+.about-hero .sec-label{color:var(--brown-lt);position:relative}
+.about-hero h1{font-family:var(--display);font-size:clamp(2rem,4vw,3rem);font-weight:300;color:var(--white);margin-bottom:.5rem;position:relative}
+.about-hero p{font-size:.85rem;font-weight:300;color:rgba(255,255,255,.4);max-width:440px;margin:0 auto;line-height:1.7;position:relative}
+
+.timeline{max-width:650px;margin:0 auto;position:relative;padding:3rem 0 3rem 2.5rem}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--brown-lt);opacity:.3}
+.tl-item{margin-bottom:2.5rem;position:relative}
+.tl-item::before{content:'';position:absolute;left:-2.5rem;top:.35rem;width:6px;height:6px;border-radius:50%;border:1px solid var(--brown);background:var(--white)}
+.tl-year{font-family:var(--display);font-size:1.2rem;font-weight:400;color:var(--maroon);margin-bottom:.25rem}
+.tl-text{font-size:.78rem;font-weight:300;color:var(--gray);line-height:1.7}
+
+.values-grid{max-width:800px;margin:2rem auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;text-align:center}
+.val-icon{width:42px;height:42px;margin:0 auto .75rem;border-radius:50%;border:1px solid var(--brown-lt);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--brown)}
+.val-title{font-family:var(--display);font-size:1.1rem;font-weight:400;color:var(--maroon);margin-bottom:.35rem}
+.val-text{font-size:.7rem;font-weight:300;color:var(--gray);line-height:1.6}
+
+/* ═══ DELIVERY ═══ */
+.del-grid{max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.del-card{background:var(--beige);border-radius:var(--r);padding:1.5rem}
+.del-card h3{font-family:var(--display);font-size:1.1rem;font-weight:400;color:var(--maroon);margin-bottom:.5rem}
+.del-card p{font-size:.75rem;font-weight:300;color:var(--gray);line-height:1.7;margin-bottom:.35rem}
+.del-price{font-family:var(--display);font-size:1rem;color:var(--brown);margin-top:.4rem}
+
+.zones-grid{max-width:900px;margin:1.5rem auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.zone{padding:1rem;background:var(--beige);border-radius:var(--r);text-align:center}
+.zone .city{font-family:var(--display);font-size:.95rem;font-weight:400;color:var(--maroon);margin-bottom:.2rem}
+.zone .info{font-size:.65rem;font-weight:300;color:var(--gray);line-height:1.5}
+
+/* ═══ ADMIN ═══ */
+.adm{display:flex;min-height:100vh;padding-top:56px}
+.adm-side{width:210px;background:var(--dark);padding:1.5rem 0;position:fixed;top:56px;bottom:0;left:0;overflow-y:auto;flex-shrink:0}
+.adm-side-title{font-size:.48rem;font-weight:500;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.18);padding:0 1rem;margin-bottom:.5rem;margin-top:1.25rem}.adm-side-title:first-child{margin-top:0}
+.adm-nav{list-style:none}
+.adm-nav li a{display:flex;align-items:center;gap:.5rem;padding:.45rem 1rem;font-size:.72rem;color:rgba(255,255,255,.4);text-decoration:none;cursor:pointer;transition:all .2s}
+.adm-nav li a:hover{color:rgba(255,255,255,.75);background:rgba(255,255,255,.03)}
+.adm-nav li a.on{color:var(--rose-lt);background:rgba(187,104,113,.08);border-right:2px solid var(--rose)}
+.adm-nav li a .i{width:12px;text-align:center;opacity:.5;font-size:.6rem}
+.adm-body{flex:1;margin-left:210px;padding:1.5rem;background:#f7f4f1;min-height:calc(100vh - 56px)}
+.adm-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.adm-top h2{font-family:var(--display);font-size:1.4rem;font-weight:400;color:var(--maroon)}
+.adm-top .dt{font-size:.68rem;color:var(--gray)}
+.adm-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.5rem}
+.adm-s{background:var(--white);padding:1rem;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+.adm-s .lb{font-size:.52rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-lt);margin-bottom:.3rem}
+.adm-s .vl{font-family:var(--display);font-size:1.4rem;font-weight:400;color:var(--maroon)}
+.adm-s .ch{font-size:.6rem;margin-top:.15rem}.ch.up{color:#5a9a5a}
+
+.adm-card{background:var(--white);border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.03);overflow:hidden;margin-bottom:1.25rem}
+.adm-card-h{display:flex;justify-content:space-between;align-items:center;padding:1rem;border-bottom:1px solid rgba(0,0,0,.04)}
+.adm-card-h h3{font-family:var(--display);font-size:1rem;font-weight:400;color:var(--maroon)}
+.adm-search{font-family:var(--body);font-size:.72rem;padding:.35rem .75rem;border:1px solid rgba(0,0,0,.07);border-radius:4px;outline:none;width:180px;transition:border-color .3s}
+.adm-search:focus{border-color:var(--brown)}
+table{width:100%;border-collapse:collapse}
+table th{text-align:left;padding:.5rem 1rem;font-size:.5rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-lt);background:#fafaf8;border-bottom:1px solid rgba(0,0,0,.04)}
+table td{padding:.6rem 1rem;font-size:.75rem;font-weight:300;color:var(--dark);border-bottom:1px solid rgba(0,0,0,.03)}
+table tr:hover td{background:rgba(106,58,67,.012)}
+.bdg{display:inline-block;font-size:.5rem;font-weight:500;letter-spacing:.06em;padding:.15rem .45rem;border-radius:8px;text-transform:uppercase}
+.bdg.ok{background:#e8f5e8;color:#3a7a3a}.bdg.wip{background:#fef3e0;color:#9a7030}.bdg.dr{background:#f0f0f0;color:#777}
+
+/* ═══ FOOTER ═══ */
+.ftr{background:var(--dark);color:rgba(255,255,255,.4);padding:3.5rem var(--gutter) 1.5rem}
+.ftr-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2.5rem}
+.ftr-brand p{font-size:.72rem;font-weight:300;line-height:1.7;margin-top:.6rem;color:rgba(255,255,255,.22)}
+.ftr-brand .hdr-logo svg path{fill:rgba(255,255,255,.45)}
+.ftr h4{font-size:.5rem;font-weight:500;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.18);margin-bottom:.75rem}
+.ftr ul{list-style:none;display:flex;flex-direction:column;gap:.35rem}
+.ftr a{color:rgba(255,255,255,.4);text-decoration:none;font-size:.72rem;font-weight:300;cursor:pointer;transition:color .3s}
+.ftr a:hover{color:var(--rose-lt)}
+.ftr-bottom{max-width:var(--max);margin:0 auto;padding-top:1.25rem;border-top:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center;font-size:.6rem;color:rgba(255,255,255,.15)}
+.ftr-socials{display:flex;gap:.6rem}
+.ftr-socials a{width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:.5rem;font-weight:500;color:rgba(255,255,255,.2);transition:all .3s}
+.ftr-socials a:hover{border-color:var(--rose);color:var(--rose-lt)}
+
+/* ═══ SINGLE RESTAURANT PAGE ═══ */
+.rest-hero{position:relative;height:50vh;min-height:340px;overflow:hidden}
+.rest-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.rest-hero-overlay{position:absolute;inset:0;background:linear-gradient(transparent 30%,rgba(0,0,0,.6))}
+.rest-hero-content{position:absolute;bottom:2.5rem;left:0;right:0;z-index:2;max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
+.rest-hero-name{font-family:var(--display);font-size:clamp(2rem,4vw,3rem);font-weight:300;color:var(--white);margin-bottom:.3rem}
+.rest-hero-loc{font-size:.8rem;font-weight:300;color:rgba(255,255,255,.6);margin-bottom:1rem}
+.rest-hero-btns{display:flex;gap:.6rem}
+
+.rest-detail{padding:2.5rem var(--gutter) 4rem}
+.rest-detail-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr;gap:3rem}
+.rest-info h3{font-family:var(--display);font-size:1.3rem;font-weight:400;color:var(--maroon);margin-bottom:.75rem}
+.rest-info p{font-size:.8rem;font-weight:300;color:var(--gray);line-height:1.8;margin-bottom:1rem}
+.rest-features{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1.5rem}
+.rest-feat{background:var(--beige);padding:1rem;border-radius:var(--r)}
+.rest-feat .fl{font-size:.52rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-lt);margin-bottom:.15rem}
+.rest-feat .fv{font-family:var(--display);font-size:.95rem;color:var(--maroon)}
+
+.rest-gallery-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;border-radius:var(--r);overflow:hidden}
+.rest-gallery-grid img{width:100%;aspect-ratio:4/3;object-fit:cover;cursor:pointer;transition:transform .5s var(--ease)}
+.rest-gallery-grid img:hover{transform:scale(1.04)}
+.rest-gallery-grid img:first-child{grid-column:1/3;aspect-ratio:16/9}
+
+.rest-menu-preview{padding:0 var(--gutter) 4rem}
+.rest-menu-preview h3{font-family:var(--display);font-size:1.3rem;font-weight:400;color:var(--maroon);text-align:center;margin-bottom:1.5rem}
+
+/* ═══ MODAL ═══ */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-backdrop.open{opacity:1;pointer-events:auto}
+.modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.95);background:var(--white);border-radius:8px;width:90%;max-width:520px;max-height:85vh;overflow-y:auto;z-index:301;opacity:0;pointer-events:none;transition:all .35s var(--ease);box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 1.5rem;border-bottom:1px solid rgba(0,0,0,.06)}
+.modal-head h3{font-family:var(--display);font-size:1.15rem;font-weight:400;color:var(--maroon)}
+.modal-close{width:28px;height:28px;border-radius:50%;border:1px solid rgba(0,0,0,.1);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:var(--gray);transition:all .2s}
+.modal-close:hover{border-color:var(--rose);color:var(--rose)}
+.modal-body{padding:1.5rem}
+.modal-body label{display:block;font-size:.58rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-lt);margin-bottom:.3rem;margin-top:1rem}
+.modal-body label:first-child{margin-top:0}
+.modal-body input,.modal-body select,.modal-body textarea{width:100%;font-family:var(--body);font-size:.8rem;padding:.55rem .75rem;border:1px solid rgba(0,0,0,.1);border-radius:4px;outline:none;transition:border-color .3s;background:var(--white);color:var(--dark)}
+.modal-body input:focus,.modal-body select:focus,.modal-body textarea:focus{border-color:var(--brown)}
+.modal-body textarea{resize:vertical;min-height:80px}
+.modal-body select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3' fill='none' stroke='%23999' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center}
+.modal-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.modal-foot{padding:1rem 1.5rem;border-top:1px solid rgba(0,0,0,.06);display:flex;justify-content:flex-end;gap:.5rem}
+.modal-foot .btn-cancel{font-family:var(--body);font-size:.65rem;padding:.55rem 1.2rem;border:1px solid rgba(0,0,0,.1);background:none;color:var(--gray);cursor:pointer;border-radius:3px;transition:all .2s}
+.modal-foot .btn-cancel:hover{border-color:var(--gray);color:var(--dark)}
+.modal-foot .btn-save{font-family:var(--body);font-size:.65rem;padding:.55rem 1.2rem;border:none;background:var(--brown);color:var(--white);cursor:pointer;border-radius:3px;transition:background .2s}
+.modal-foot .btn-save:hover{background:var(--maroon)}
+
+/* fix footer logo */
+.ftr-logo-wrap{display:flex;align-items:center;cursor:pointer}
+.ftr-logo-wrap svg{height:36px;width:auto}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(60px);background:var(--maroon);color:var(--white);font-size:.7rem;padding:.65rem 1.4rem;border-radius:3px;z-index:200;opacity:0;transition:all .4s var(--ease);pointer-events:none;box-shadow:0 8px 30px rgba(106,58,67,.3)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(20px);transition:all .7s var(--ease)}
+.rv.vis{opacity:1;transform:translateY(0)}
+.rv-d{transition-delay:calc(var(--d,0)*.1s)}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .dirs-grid,.prod-grid,.rest-grid{grid-template-columns:repeat(2,1fr)}
+  .about-inner{grid-template-columns:1fr}
+  .about-img{max-width:400px;margin:0 auto}
+  .pd-layout{grid-template-columns:1fr}
+  .hero-cards{display:none}
+  .stats-grid,.adm-stats{grid-template-columns:repeat(2,1fr)}
+  .ftr-grid{grid-template-columns:1fr 1fr}
+  .del-grid,.values-grid{grid-template-columns:1fr}
+  .zones-grid{grid-template-columns:1fr 1fr}
+  .adm-side{width:170px}.adm-body{margin-left:170px}
+}
+@media(max-width:768px){
+  .mob-toggle{display:block}
+  .hdr-nav{display:none}.hdr-nav.open{display:flex;flex-direction:column;position:fixed;inset:0;background:var(--white);justify-content:center;align-items:center;gap:1.5rem;z-index:100}.hdr-nav.open a{font-size:1rem;color:var(--maroon)}
+  .hdr-tel{display:none}
+  .dirs-grid,.prod-grid,.rest-grid{grid-template-columns:1fr}
+  .dir-card{aspect-ratio:5/4}
+  .hero{min-height:85vh}
+  .hero-text{padding-top:6rem}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .ftr-grid{grid-template-columns:1fr}
+  .ftr-bottom{flex-direction:column;gap:.6rem;text-align:center}
+  .pd-specs{grid-template-columns:1fr 1fr}
+  .cat-filters{gap:.4rem}
+  .adm-side{display:none}.adm-body{margin-left:0}
+  .zones-grid,.values-grid{grid-template-columns:1fr}
+  .pd-layout{gap:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr" id="hdr">
+<div class="hdr-inner">
+  <div style="display:flex;align-items:center;gap:1.25rem">
+    <button class="mob-toggle" id="mobTog"><span></span><span></span><span></span></button>
+    <a class="hdr-logo" onclick="go('home')"><svg width="106" height="60" viewBox="0 0 106 60" fill="none"><path d="M68.99 49.91C69.78 49.78 70.54 49.51 71.23 49.1L70.73 47.94 70.47 48.11C70.24 48.26 70 48.39 69.75 48.5 68.94 48.86 68.07 49.04 67.19 49.04 66.54 49.04 65.9 48.89 65.32 48.6 64.74 48.3 64.23 47.89 63.82 47.38 63.39 46.84 63.06 46.23 62.85 45.57 62.62 44.84 62.5 44.09 62.51 43.32 62.46 42.11 62.75 40.9 63.32 39.83 63.76 39.05 64.42 38.42 65.22 38.03 65.91 37.68 66.68 37.51 67.46 37.51 67.88 37.51 68.31 37.56 68.73 37.65 69.05 37.74 69.38 37.84 69.69 37.96 69.93 38.05 70.15 38.17 70.36 38.3 70.51 38.4 70.59 38.46 70.59 38.47L71.16 37.34C70.84 37.16 70.5 37.02 70.15 36.91 69.25 36.62 68.3 36.47 67.34 36.48 66.19 36.46 65.05 36.69 63.99 37.16 62.94 37.63 62.04 38.4 61.43 39.38 60.71 40.57 60.36 41.95 60.4 43.33 60.39 44.27 60.57 45.19 60.92 46.06 61.25 46.87 61.75 47.61 62.39 48.21 63.02 48.81 63.76 49.28 64.58 49.58 65.46 49.9 66.39 50.07 67.32 50.06 67.88 50.06 68.44 50.02 68.99 49.91Z" fill="#A77E56"/><path d="M12.03 36.78 7.26 47.54 3 36.78H.48L0 49.76H1.17L1.5 39.04 6.03 49.76H7.47L12.36 38.96 12.77 49.76H14.85L14.36 36.78H12.03Z" fill="#A77E56"/><path d="M23.56 49.76V43.98L27.75 36.78H26.42L23.03 42.89 19.34 36.78H16.75L21.56 44.23V49.76H23.56Z" fill="#A77E56"/><path d="M47.19 49.26C47.07 49.16 46.96 49.06 46.86 48.94 46.52 48.57 46.22 48.16 45.96 47.72 45.52 46.98 45.12 46.2 44.77 45.41 44.54 44.85 44.16 44.37 43.68 44.01 43.3 43.76 42.87 43.61 42.42 43.58 43.28 43.4 44.08 43 44.73 42.42 45.01 42.16 45.24 41.85 45.39 41.5 45.54 41.15 45.61 40.77 45.61 40.39 45.63 39.89 45.55 39.39 45.35 38.93 45.15 38.47 44.86 38.05 44.48 37.72 43.65 37.02 42.35 36.67 40.59 36.67H36.11V49.76H38.17V43.88H40.1C40.37 43.88 40.63 43.92 40.88 43.99 41.08 44.05 41.27 44.13 41.44 44.24 41.76 44.47 42.03 44.77 42.24 45.11L43.04 46.57C43.33 47.09 43.61 47.56 43.9 47.98 44.18 48.41 44.52 48.81 44.89 49.17 45.18 49.45 45.52 49.67 45.91 49.81 46.08 49.85 46.26 49.87 46.44 49.88 46.51 49.88 46.59 49.88 46.66 49.88 46.83 49.88 47.01 49.86 47.18 49.82 47.42 49.77 47.65 49.65 47.83 49.48 47.6 49.48 47.38 49.4 47.19 49.26ZM41.07 42.97C40.64 43.06 40.19 43.11 39.75 43.11H38.17V37.63H40.29C41.13 37.58 41.97 37.82 42.65 38.31 42.95 38.58 43.18 38.91 43.33 39.28 43.48 39.65 43.55 40.05 43.52 40.44 43.53 40.84 43.44 41.23 43.25 41.57 43.06 41.92 42.78 42.2 42.44 42.4 42.02 42.67 41.56 42.86 41.07 42.97Z" fill="#A77E56"/><path d="M57.98 48.76H52.12L52.1 43.38H57.22V42.43H52.1V37.79H57.91V36.78H50.01V49.76H57.98V48.76Z" fill="#A77E56"/><path d="M81.98 48.76H76.12L76.1 43.38H81.21V42.43H76.1V37.79H81.9V36.78H74V49.76H81.98V48.76Z" fill="#A77E56"/><path d="M93.42 37.83C92.95 37.43 92.4 37.13 91.81 36.96 91.06 36.74 90.28 36.63 89.49 36.65H85.31V49.77H87.41V44.18H88.67C89.45 44.19 90.23 44.11 90.99 43.95 91.93 43.8 92.82 43.4 93.56 42.8 93.88 42.52 94.14 42.17 94.31 41.78 94.49 41.39 94.57 40.96 94.56 40.54 94.56 40.04 94.47 39.54 94.29 39.07 94.1 38.6 93.8 38.17 93.42 37.83ZM92.13 41.75C91.75 42.38 91.13 42.84 90.41 43.02 89.71 43.23 88.97 43.33 88.24 43.32H87.4V37.61H89.27C90.11 37.58 90.94 37.85 91.59 38.39 91.87 38.67 92.09 39.02 92.23 39.39 92.37 39.77 92.42 40.17 92.39 40.58 92.4 40.98 92.31 41.39 92.13 41.75Z" fill="#A77E56"/><path d="M96.03 36.78V37.73H99.97V49.76H102.06V37.73H106V36.78H96.03Z" fill="#A77E56"/><path d="M44.59 22.58V27.41H61.19V22.58C62.62 21.75 63.8 20.55 64.58 19.1 66.13 16.19 65.45 13.38 62.77 11.79 61.64 11.11 60.3 10.85 58.99 11.06 58.76 10.58 58.46 10.14 58.11 9.75 56.92 8.45 55.19 7.79 52.96 7.79 50.72 7.79 48.9 8.49 47.71 9.82 47.37 10.2 47.08 10.62 46.86 11.07 45.53 10.84 44.16 11.09 43 11.79 40.32 13.38 39.63 16.19 41.19 19.1 41.98 20.55 43.16 21.75 44.59 22.58ZM59.4 25.59H46.4V23.37H59.4V25.59ZM59.68 14.22C59.69 13.75 59.64 13.27 59.56 12.8 60.37 12.73 61.18 12.92 61.88 13.34 64.37 14.82 63.66 17.05 63.04 18.25 61.85 20.46 59.38 22 58.04 21.34 57.79 21.22 57.55 21.06 57.35 20.86 57.5 20.68 57.65 20.48 57.79 20.29 58.99 18.49 59.65 16.38 59.68 14.22ZM49.05 11.03C49.9 10.07 51.22 9.59 52.97 9.59 54.71 9.59 55.97 10.04 56.79 10.96 57.55 11.87 57.95 13.03 57.9 14.22 57.87 16.04 57.3 17.8 56.27 19.3 55.26 20.76 54 21.62 52.79 21.62 51.59 21.62 50.41 20.81 49.45 19.4 48.47 17.93 47.93 16.21 47.91 14.45 47.92 13.44 48.11 12.06 49.05 11.03ZM43.94 13.34C44.64 12.92 45.45 12.73 46.26 12.8 46.15 13.33 46.1 13.88 46.1 14.42 46.12 16.54 46.77 18.62 47.95 20.38 48.09 20.59 48.23 20.77 48.38 20.96 48.2 21.12 47.99 21.25 47.77 21.35 46.44 21.99 43.96 20.45 42.78 18.26 42.15 17.05 41.45 14.82 43.94 13.34Z" fill="#A77E56"/><path d="M52.94 7.79C53.52 7.79 54.08 7.59 54.52 7.22 54.97 6.85 55.27 6.34 55.37 5.77 55.48 5.2 55.38 4.62 55.1 4.12 54.81 3.61 54.36 3.23 53.82 3.02 54.98.52 58.18 1.05 58.18 1.05 58.18 1.05 58.06 0 57.63 0 54.99 0 53.85 2.32 53.58 2.95 53.38 2.89 53.16 2.86 52.94 2.86 52.29 2.86 51.66 3.12 51.2 3.58 50.74 4.04 50.48 4.67 50.48 5.32 50.48 5.98 50.74 6.61 51.2 7.07 51.66 7.53 52.29 7.79 52.94 7.79Z" fill="#A77E56"/></svg></a>
+  </div>
+  <nav><ul class="hdr-nav" id="mainNav">
+    <li><a onclick="go('restaurants')" id="n-restaurants">Рестораны</a></li>
+    <li><a onclick="go('cakes')" id="n-cakes">Торты</a></li>
+    <li><a onclick="go('culinary')" id="n-culinary">Кулинария</a></li>
+    <li><a onclick="go('about')" id="n-about">О нас</a></li>
+    <li><a onclick="go('delivery')" id="n-delivery">Доставка</a></li>
+  </ul></nav>
+  <div class="hdr-right">
+    <a href="tel:+79286666950" class="hdr-tel">+7 (928) 666-69-50</a>
+    <button class="cart-btn"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><span class="cart-badge">0</span></button>
+    <button class="btn-adm" onclick="go('admin')">Админка</button>
+  </div>
+</div>
+</header>
+
+<!-- ═══ HOME ═══ -->
+<div class="page on" id="p-home">
+  <section class="hero">
+    <div class="hero-img"></div>
+    <div class="hero-gradient"></div>
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-eyebrow"><span class="line"></span><span class="txt">Кондитерский бутик</span></div>
+        <h1>Мир вкуса<br>в одном<br><em>пространстве</em></h1>
+        <p class="hero-desc">Рестораны, торты на заказ, кулинария и доставка — всё в одной экосистеме My&nbsp;Recept.</p>
+        <div class="hero-btns">
+          <a class="btn" onclick="document.getElementById('dirs').scrollIntoView({behavior:'smooth'})"><span>Направления</span></a>
+          <a class="btn btn-accent" onclick="go('cakes')"><span>Торты на заказ</span></a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-cards">
+      <div class="hero-mini"><img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&q=80" alt="Торт"><span class="tag">Торты</span></div>
+      <div class="hero-mini"><img src="https://images.unsplash.com/photo-1555507036-ab1f4038024a?w=400&q=80" alt="Ресторан"><span class="tag">Рестораны</span></div>
+      <div class="hero-mini"><img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=80" alt="Выпечка"><span class="tag">Кулинария</span></div>
+    </div>
+    <div class="hero-scroll"><span class="t">Scroll</span><span class="l"></span></div>
+  </section>
+
+  <div class="marquee"><div class="marquee-track"><span class="marquee-item">Рестораны</span><span class="marquee-dot"></span><span class="marquee-item">Торты на заказ</span><span class="marquee-dot"></span><span class="marquee-item">Кулинария</span><span class="marquee-dot"></span><span class="marquee-item">Доставка</span><span class="marquee-dot"></span><span class="marquee-item">Приложение</span><span class="marquee-dot"></span><span class="marquee-item">Программа лояльности</span><span class="marquee-dot"></span><span class="marquee-item">Рестораны</span><span class="marquee-dot"></span><span class="marquee-item">Торты на заказ</span><span class="marquee-dot"></span><span class="marquee-item">Кулинария</span><span class="marquee-dot"></span><span class="marquee-item">Доставка</span><span class="marquee-dot"></span><span class="marquee-item">Приложение</span><span class="marquee-dot"></span><span class="marquee-item">Программа лояльности</span><span class="marquee-dot"></span></div></div>
+
+  <section class="dirs" id="dirs">
+    <div class="section-header" style="text-align:center;margin-bottom:2.5rem"><span class="sec-label">Экосистема</span><h2 class="sec-title">Направления</h2><div class="sec-line"></div></div>
+    <div class="dirs-grid">
+      <div class="dir-card rv rv-d" style="--d:0" onclick="go('restaurants')"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=80" alt="Рестораны"><div class="dir-card-overlay"></div><div class="dir-card-content"><span class="dir-card-num">01</span><h3 class="dir-card-title">Рестораны</h3><p class="dir-card-sub">Атмосфера вкуса в каждом городе</p></div><div class="dir-card-arrow"><span>Выбрать →</span></div></div>
+      <div class="dir-card rv rv-d" style="--d:1" onclick="go('cakes')"><img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&q=80" alt="Торты"><div class="dir-card-overlay"></div><div class="dir-card-content"><span class="dir-card-num">02</span><h3 class="dir-card-title">Торты на заказ</h3><p class="dir-card-sub">Создадим торт вашей мечты</p></div><div class="dir-card-arrow"><span>Заказать →</span></div></div>
+      <div class="dir-card rv rv-d" style="--d:2" onclick="go('culinary')"><img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&q=80" alt="Кулинария"><div class="dir-card-overlay"></div><div class="dir-card-content"><span class="dir-card-num">03</span><h3 class="dir-card-title">Кулинария</h3><p class="dir-card-sub">Готовые десерты и выпечка</p></div><div class="dir-card-arrow"><span>Смотреть →</span></div></div>
+      <div class="dir-card rv rv-d" style="--d:3" onclick="toast('Раздел B2B в разработке')"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" alt="B2B"><div class="dir-card-overlay"></div><span class="dir-card-badge">Скоро</span><div class="dir-card-content"><span class="dir-card-num">04</span><h3 class="dir-card-title">B2B</h3><p class="dir-card-sub">Сотрудничество для бизнеса</p></div><div class="dir-card-arrow"><span>Заявка →</span></div></div>
+      <div class="dir-card rv rv-d" style="--d:4" onclick="toast('Скоро в App Store')"><img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80" alt="Приложение"><div class="dir-card-overlay"></div><div class="dir-card-content"><span class="dir-card-num">05</span><h3 class="dir-card-title">Приложение</h3><p class="dir-card-sub">Все сервисы в одном приложении</p></div><div class="dir-card-arrow"><span>Скачать →</span></div></div>
+      <div class="dir-card rv rv-d" style="--d:5" onclick="go('about')"><img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600&q=80" alt="О нас"><div class="dir-card-overlay"></div><div class="dir-card-content"><span class="dir-card-num">06</span><h3 class="dir-card-title">О нас + Карьера</h3><p class="dir-card-sub">Наша история и команда</p></div><div class="dir-card-arrow"><span>Подробнее →</span></div></div>
+    </div>
+  </section>
+
+  <section class="about-strip">
+    <div class="about-inner">
+      <div class="about-img rv"><img src="https://images.unsplash.com/photo-1486427944544-d2c246c4df4e?w=600&q=80" alt="Кухня"></div>
+      <div class="about-text rv">
+        <span class="sec-label">Философия</span>
+        <h2>Мы верим, что еда — это язык, на котором говорит забота</h2>
+        <p>Каждый десерт в My&nbsp;Recept — история, рассказанная руками наших кондитеров. Только натуральные ингредиенты и никаких компромиссов во вкусе.</p>
+        <p>От ресторанов до доставки — каждая точка контакта создана дарить радость.</p>
+        <a class="btn btn-brown btn-sm" onclick="go('about')"><span>Узнать больше</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="quote">
+    <p class="rv">Мы создаём не просто еду — мы создаём моменты, которые хочется переживать снова</p>
+    <span class="author rv">My Recept — с 2018 года</span>
+  </section>
+
+  <section class="stats-bar">
+    <div class="stats-grid">
+      <div class="rv rv-d" style="--d:0"><div class="stat-n">6</div><div class="stat-l">Ресторанов<br>в 3 городах</div></div>
+      <div class="rv rv-d" style="--d:1"><div class="stat-n">4 000+</div><div class="stat-l">Гостей<br>ежемесячно</div></div>
+      <div class="rv rv-d" style="--d:2"><div class="stat-n">200+</div><div class="stat-l">Тортов<br>на заказ в месяц</div></div>
+      <div class="rv rv-d" style="--d:3"><div class="stat-n">50+</div><div class="stat-l">Позиций<br>в кулинарии</div></div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══ RESTAURANTS ═══ -->
+<div class="page" id="p-restaurants">
+  <div class="cat-hero"><div class="container"><div class="breadcrumb"><a onclick="go('home')">Главная</a><span class="sep">/</span><span class="cur">Рестораны</span></div></div><h1>Наши рестораны</h1><p class="tagline">Атмосфера вкуса и уюта. Забронируйте столик или посмотрите меню.</p></div>
+  <section class="container" style="padding:2rem 0 4rem">
+    <div class="rest-grid">
+      <div class="rest-card" onclick="goRest()"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&q=80" alt=""><div class="rest-card-info"><div class="rest-card-name">My Recept Пресня</div><div class="rest-card-loc">Москва, ул. Пресненская, 12</div></div><div class="rest-overlay"><button class="btn btn-sm" style="border-color:#fff;color:#fff" onclick="event.stopPropagation();goRest()"><span>Меню</span></button><button class="btn btn-sm" style="border-color:#fff;color:#fff" onclick="event.stopPropagation();openModal('modal-book')"><span>Забронировать</span></button><a class="site-lnk" onclick="event.stopPropagation();goRest()">подробнее →</a></div></div>
+      <div class="rest-card"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=500&q=80" alt=""><div class="rest-card-info"><div class="rest-card-name">My Recept Патрики</div><div class="rest-card-loc">Москва, Патриаршие пруды</div></div><div class="rest-overlay"><button class="btn btn-sm" style="border-color:#fff;color:#fff"><span>Меню</span></button><button class="btn btn-sm" style="border-color:#fff;color:#fff"><span>Забронировать</span></button><a class="site-lnk">перейти на сайт →</a></div></div>
+      <div class="rest-card"><img src="https://images.unsplash.com/photo-1550966871-3ed3cdb51f3a?w=500&q=80" alt=""><div class="rest-card-info"><div class="rest-card-name">My Recept Невский</div><div class="rest-card-loc">Санкт-Петербург, Невский пр.</div></div><div class="rest-overlay"><button class="btn btn-sm" style="border-color:#fff;color:#fff"><span>Меню</span></button><button class="btn btn-sm" style="border-color:#fff;color:#fff"><span>Забронировать</span></button><a class="site-lnk">перейти на сайт →</a></div></div>
+      <div class="rest-card"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&q=80" alt=""><div class="rest-card-info"><div class="rest-card-name">My Recept Рубинштейна</div><div class="rest-card-loc">Санкт-Петербург</div></div><div class="rest-overlay"><button class="btn btn-sm" style="border-color:#fff;color:#fff"><span>Меню</span></button><button class="btn btn-sm" style="border-color:#fff;color:#fff"><span>Забронировать</span></button><a class="site-lnk">перейти на сайт →</a></div></div>
+      <div class="rest-card"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&q=80" alt=""><div class="rest-card-info"><div class="rest-card-name">My Recept Махачкала</div><div class="rest-card-loc">Махачкала, пр. Гамидова</div></div><div class="rest-overlay"><button class="btn btn-sm" style="border-color:#fff;color:#fff"><span>Меню</span></button><button class="btn btn-sm" style="border-color:#fff;color:#fff"><span>Забронировать</span></button><a class="site-lnk">перейти на сайт →</a></div></div>
+      <div class="rest-card"><img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=500&q=80" alt=""><div class="rest-card-info"><div class="rest-card-name">My Recept Каспий</div><div class="rest-card-loc">Махачкала, наб. Каспийская</div></div><div class="rest-overlay"><button class="btn btn-sm" style="border-color:#fff;color:#fff"><span>Меню</span></button><button class="btn btn-sm" style="border-color:#fff;color:#fff"><span>Забронировать</span></button><a class="site-lnk">перейти на сайт →</a></div></div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══ CAKES ═══ -->
+<div class="page" id="p-cakes">
+  <div class="cat-hero"><div class="container"><div class="breadcrumb"><a onclick="go('home')">Главная</a><span class="sep">/</span><span class="cur">Торты на заказ</span></div></div><h1>Торты на заказ</h1><p class="tagline">Обещаем хорошее настроение и незабываемое послевкусие!</p></div>
+  <section class="catalog container">
+    <div class="cat-filters"><button class="cat-filter on" onclick="filt(this)">Все</button><button class="cat-filter" onclick="filt(this)">Классические</button><button class="cat-filter" onclick="filt(this)">Муссовые</button><button class="cat-filter" onclick="filt(this)">Свадебные</button><button class="cat-filter" onclick="filt(this)">Детские</button></div>
+    <div class="prod-grid">
+      <div class="prod-card" onclick="go('product')"><div class="prod-img"><img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span><span></span></div></div><div class="prod-body"><div class="prod-name">Торт «Мокко»</div><div class="prod-desc">Шоколадный бисквит с кофейным кремом и карамельной прослойкой</div><div class="prod-bottom"><span class="prod-price">1 700 ₽ <small>/ кг</small></span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+      <div class="prod-card" onclick="go('product')"><div class="prod-img"><img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span><span></span></div></div><div class="prod-body"><div class="prod-name">Фисташка-Малина</div><div class="prod-desc">Фисташковый мусс с малиновым кули и хрустящим слоем</div><div class="prod-bottom"><span class="prod-price">2 340 ₽ <small>/ кг</small></span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+      <div class="prod-card" onclick="go('product')"><div class="prod-img"><img src="https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span><span></span></div></div><div class="prod-body"><div class="prod-name">Графские развалины</div><div class="prod-desc">Медовые коржи со сметанным кремом и грецким орехом</div><div class="prod-bottom"><span class="prod-price">1 500 ₽ <small>/ кг</small></span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+      <div class="prod-card" onclick="go('product')"><div class="prod-img"><img src="https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span><span></span></div></div><div class="prod-body"><div class="prod-name">Три шоколада</div><div class="prod-desc">Муссовый торт из белого, молочного и тёмного шоколада</div><div class="prod-bottom"><span class="prod-price">1 800 ₽ <small>/ кг</small></span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+      <div class="prod-card" onclick="go('product')"><div class="prod-img"><img src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span><span></span></div></div><div class="prod-body"><div class="prod-name">Клубничная нежность</div><div class="prod-desc">Воздушный бисквит с клубничным конфитюром и сливочным кремом</div><div class="prod-bottom"><span class="prod-price">1 600 ₽ <small>/ кг</small></span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+      <div class="prod-card" onclick="go('product')"><div class="prod-img"><img src="https://images.unsplash.com/photo-1535141192574-5d4897c12f40?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span><span></span></div></div><div class="prod-body"><div class="prod-name">Чизкейк Нью-Йорк</div><div class="prod-desc">Классический чизкейк на песочной основе с ванилью Мадагаскара</div><div class="prod-bottom"><span class="prod-price">1 400 ₽ <small>/ кг</small></span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+    </div>
+    <div class="show-more"><button class="btn btn-fill btn-sm" onclick="toast('Загрузка...')"><span>Показать ещё</span></button></div>
+  </section>
+</div>
+
+<!-- ═══ PRODUCT DETAIL ═══ -->
+<div class="page" id="p-product">
+  <div class="pd-wrap">
+    <div class="container"><div class="breadcrumb"><a onclick="go('home')">Главная</a><span class="sep">/</span><a onclick="go('cakes')">Торты</a><span class="sep">/</span><span class="cur">Торт «Мокко»</span></div></div>
+    <div class="pd-layout container">
+      <div class="pd-gallery"><img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&q=80" alt="Торт Мокко"><div class="pd-gallery-dots"><span class="on"></span><span></span><span></span><span></span></div></div>
+      <div class="pd-info">
+        <h1 class="pd-title">Торт «Мокко»</h1>
+        <div class="pd-price-row"><span class="pd-price">1 700 ₽</span><span class="pd-price-old">2 100 ₽</span></div>
+        <p class="pd-price-note">* Цена за 1 кг без оформления</p>
+        <div class="pd-actions">
+          <button class="btn btn-fill" onclick="toast('Добавлено в корзину')"><span>В корзину</span></button>
+          <button class="btn btn-brown btn-sm" onclick="toast('Оформляем заказ...')"><span>Купить в 1 клик</span></button>
+        </div>
+        <div class="pd-tabs"><button class="pd-tab on" onclick="pdTab(this)">Описание</button><button class="pd-tab" onclick="pdTab(this)">Доставка</button><button class="pd-tab" onclick="pdTab(this)">Оплата</button></div>
+        <div class="pd-specs">
+          <div class="pd-spec"><div class="pd-spec-label">Цена за кг</div><div class="pd-spec-val">1 700 ₽</div></div>
+          <div class="pd-spec"><div class="pd-spec-label">Покрытие</div><div class="pd-spec-val">Сливки</div></div>
+          <div class="pd-spec"><div class="pd-spec-label">Декор</div><div class="pd-spec-val">Как на фото</div></div>
+          <div class="pd-spec"><div class="pd-spec-label">Мин. вес</div><div class="pd-spec-val">2 кг</div></div>
+          <div class="pd-spec"><div class="pd-spec-label">Ярусов</div><div class="pd-spec-val">1 ярус</div></div>
+          <div class="pd-spec"><div class="pd-spec-label">Срок годности</div><div class="pd-spec-val">2 дня</div></div>
+        </div>
+        <p class="pd-desc-text">Шоколадный бисквит с насыщенным кофейным кремом на основе арабики и прослойкой из солёной карамели. Покрытие — натуральные сливки. Торт подходит для праздничных событий, дней рождения и корпоративов. Минимальный заказ — 2 кг, срок изготовления — 1 день.</p>
+      </div>
+    </div>
+  </div>
+  <section class="pd-related container">
+    <h3>Рекомендуем попробовать</h3>
+    <div class="prod-grid">
+      <div class="prod-card" onclick="go('product')"><div class="prod-img"><img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span><span></span></div></div><div class="prod-body"><div class="prod-name">Фисташка-Малина</div><div class="prod-desc">Фисташковый мусс с малиновым кули</div><div class="prod-bottom"><span class="prod-price">2 340 ₽</span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+      <div class="prod-card" onclick="go('product')"><div class="prod-img"><img src="https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span><span></span></div></div><div class="prod-body"><div class="prod-name">Графские развалины</div><div class="prod-desc">Медовые коржи со сметанным кремом</div><div class="prod-bottom"><span class="prod-price">1 500 ₽</span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+      <div class="prod-card" onclick="go('product')"><div class="prod-img"><img src="https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span><span></span></div></div><div class="prod-body"><div class="prod-name">Три шоколада</div><div class="prod-desc">Из белого, молочного и тёмного</div><div class="prod-bottom"><span class="prod-price">1 800 ₽</span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══ CULINARY ═══ -->
+<div class="page" id="p-culinary">
+  <div class="cat-hero"><div class="container"><div class="breadcrumb"><a onclick="go('home')">Главная</a><span class="sep">/</span><span class="cur">Кулинария</span></div></div><h1>Кулинария</h1><p class="tagline">Свежие десерты и выпечка для дома и офиса. Каждый день.</p></div>
+  <section class="catalog container">
+    <div class="cat-filters"><button class="cat-filter on" onclick="filt(this)">Москва</button><button class="cat-filter" onclick="filt(this)">Санкт-Петербург</button><button class="cat-filter" onclick="filt(this)">Махачкала</button></div>
+    <div class="prod-grid">
+      <div class="prod-card"><div class="prod-img"><img src="https://images.unsplash.com/photo-1555507036-ab1f4038024a?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span></div></div><div class="prod-body"><div class="prod-name">Круассан классический</div><div class="prod-desc">Слоёное тесто, натуральное масло</div><div class="prod-bottom"><span class="prod-price">180 ₽</span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+      <div class="prod-card"><div class="prod-img"><img src="https://images.unsplash.com/photo-1525059696034-4967a8e1dca2?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span></div></div><div class="prod-body"><div class="prod-name">Эклер ванильный</div><div class="prod-desc">Заварное тесто с ванильным кремом</div><div class="prod-bottom"><span class="prod-price">220 ₽</span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+      <div class="prod-card"><div class="prod-img"><img src="https://images.unsplash.com/photo-1569864358642-9d1684040f43?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span></div></div><div class="prod-body"><div class="prod-name">Макаронс ассорти</div><div class="prod-desc">Набор из 6 штук: малина, фисташка, шоколад</div><div class="prod-bottom"><span class="prod-price">650 ₽</span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+      <div class="prod-card"><div class="prod-img"><img src="https://images.unsplash.com/photo-1519915028121-7d3463d20b13?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span></div></div><div class="prod-body"><div class="prod-name">Тарт с ягодами</div><div class="prod-desc">Песочная корзинка, крем-патисьер</div><div class="prod-bottom"><span class="prod-price">380 ₽</span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+      <div class="prod-card"><div class="prod-img"><img src="https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span></div></div><div class="prod-body"><div class="prod-name">Тирамису</div><div class="prod-desc">Маскарпоне и кофе арабика</div><div class="prod-bottom"><span class="prod-price">420 ₽</span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+      <div class="prod-card"><div class="prod-img"><img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span></div></div><div class="prod-body"><div class="prod-name">Канеле бордо</div><div class="prod-desc">Хрустящая карамельная корочка</div><div class="prod-bottom"><span class="prod-price">250 ₽</span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<div class="page" id="p-about">
+  <div class="about-hero"><span class="sec-label">О нас</span><h1>Наша история</h1><p>От маленькой кондитерской до ресторанной экосистемы в 3 городах.</p></div>
+  <section style="padding:3rem var(--gutter);background:var(--white)">
+    <div class="timeline">
+      <div class="tl-item rv"><div class="tl-year">2018</div><div class="tl-text">Открытие первой кондитерской My Recept в Махачкале. 12 позиций в меню, команда из 5 человек.</div></div>
+      <div class="tl-item rv"><div class="tl-year">2019</div><div class="tl-text">Запуск «Тортов на заказ». 50+ заказов в первый месяц.</div></div>
+      <div class="tl-item rv"><div class="tl-year">2020</div><div class="tl-text">Второй ресторан. Запуск доставки. Выход в Москву.</div></div>
+      <div class="tl-item rv"><div class="tl-year">2022</div><div class="tl-text">Экспансия в Санкт-Петербург. Запуск кулинарного направления.</div></div>
+      <div class="tl-item rv"><div class="tl-year">2024</div><div class="tl-text">6 ресторанов. Разработка мобильного приложения и программы лояльности.</div></div>
+      <div class="tl-item rv"><div class="tl-year">2025</div><div class="tl-text">Перезапуск цифровой платформы — новый сайт как единый навигационный центр.</div></div>
+    </div>
+  </section>
+  <section style="padding:3rem var(--gutter) 4rem;background:var(--pink-bg)">
+    <div style="text-align:center"><span class="sec-label">Ценности</span><h2 class="sec-title">Во что мы верим</h2><div class="sec-line"></div></div>
+    <div class="values-grid">
+      <div class="rv rv-d" style="--d:0"><div class="val-icon">✦</div><div class="val-title">Натуральность</div><div class="val-text">Только натуральные ингредиенты. Никаких консервантов.</div></div>
+      <div class="rv rv-d" style="--d:1"><div class="val-icon">◈</div><div class="val-title">Мастерство</div><div class="val-text">Каждый рецепт доведён до совершенства.</div></div>
+      <div class="rv rv-d" style="--d:2"><div class="val-icon">❋</div><div class="val-title">Забота</div><div class="val-text">Каждый десерт — проявление заботы.</div></div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══ DELIVERY ═══ -->
+<div class="page" id="p-delivery">
+  <div class="cat-hero"><div class="container"><div class="breadcrumb"><a onclick="go('home')">Главная</a><span class="sep">/</span><span class="cur">Доставка и оплата</span></div></div><h1>Доставка и оплата</h1><p class="tagline">Доставляем по Москве, Санкт-Петербургу и Махачкале.</p></div>
+  <section style="padding:2rem var(--gutter) 3rem">
+    <div class="del-grid">
+      <div class="del-card"><h3>Стандартная доставка</h3><p>Курьером за 2-4 часа в термоупаковке.</p><p>10:00 — 22:00</p><div class="del-price">от 350 ₽</div></div>
+      <div class="del-card"><h3>Экспресс-доставка</h3><p>За 60 минут в центральных районах.</p><p>10:00 — 21:00</p><div class="del-price">от 600 ₽</div></div>
+      <div class="del-card"><h3>Самовывоз</h3><p>Заберите из любого ресторана.</p><p>09:00 — 22:00</p><div class="del-price">Бесплатно</div></div>
+      <div class="del-card"><h3>Оплата</h3><p>Карты, Apple Pay, Google Pay, ЮKassa.</p><p>Онлайн или при получении.</p><div class="del-price" style="color:var(--brown)">Безопасно</div></div>
+    </div>
+  </section>
+  <section style="padding:0 var(--gutter) 4rem">
+    <div style="text-align:center"><span class="sec-label">География</span><h2 class="sec-title">Зоны доставки</h2><div class="sec-line"></div></div>
+    <div class="zones-grid">
+      <div class="zone"><div class="city">Москва</div><div class="info">Все районы внутри МКАД<br>1.5 — 3 часа</div></div>
+      <div class="zone"><div class="city">Санкт-Петербург</div><div class="info">Центральные районы<br>2 — 4 часа</div></div>
+      <div class="zone"><div class="city">Махачкала</div><div class="info">По городу<br>1 — 2.5 часа</div></div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══ ADMIN ═══ -->
+<div class="page" id="p-admin">
+  <div class="adm">
+    <aside class="adm-side">
+      <div class="adm-side-title">Управление</div>
+      <ul class="adm-nav"><li><a class="on"><span class="i">◉</span>Дашборд</a></li><li><a><span class="i">☰</span>Меню</a></li><li><a><span class="i">◎</span>Заказы тортов</a></li><li><a><span class="i">□</span>Рестораны</a></li><li><a><span class="i">◇</span>Кулинария</a></li></ul>
+      <div class="adm-side-title">Контент</div>
+      <ul class="adm-nav"><li><a><span class="i">▤</span>Страницы</a></li><li><a><span class="i">◈</span>Баннеры</a></li><li><a><span class="i">✦</span>Акции</a></li></ul>
+      <div class="adm-side-title">Система</div>
+      <ul class="adm-nav"><li><a><span class="i">⚙</span>Настройки</a></li><li><a><span class="i">☷</span>Пользователи</a></li></ul>
+    </aside>
+    <main class="adm-body">
+      <div class="adm-top"><h2>Дашборд</h2><span class="dt">20 марта 2026</span></div>
+      <div class="adm-stats">
+        <div class="adm-s"><div class="lb">Заказы сегодня</div><div class="vl">24</div><div class="ch up">↑ 12%</div></div>
+        <div class="adm-s"><div class="lb">Выручка</div><div class="vl">87 400 ₽</div><div class="ch up">↑ 8%</div></div>
+        <div class="adm-s"><div class="lb">Тортов в работе</div><div class="vl">12</div><div class="ch">3 на завтра</div></div>
+        <div class="adm-s"><div class="lb">Посещений</div><div class="vl">1 280</div><div class="ch up">↑ 15%</div></div>
+      </div>
+      <div class="adm-card"><div class="adm-card-h"><h3>Последние заказы</h3><input class="adm-search" placeholder="Поиск..."></div><table><thead><tr><th>№</th><th>Клиент</th><th>Тип</th><th>Сумма</th><th>Статус</th><th></th></tr></thead><tbody><tr><td>#1247</td><td>Мария Иванова</td><td>Торт</td><td>8 500 ₽</td><td><span class="bdg ok">Готов</span></td><td><button class="btn-adm" style="font-size:.48rem;padding:.2rem .5rem" onclick="openModal('modal-order')">✎</button></td></tr><tr><td>#1246</td><td>ООО «Праздник»</td><td>B2B</td><td>45 000 ₽</td><td><span class="bdg wip">В работе</span></td></tr><tr><td>#1245</td><td>Алексей Смирнов</td><td>Кулинария</td><td>1 650 ₽</td><td><span class="bdg ok">Доставлен</span></td></tr><tr><td>#1244</td><td>Елена Козлова</td><td>Торт</td><td>12 000 ₽</td><td><span class="bdg wip">В работе</span></td></tr><tr><td>#1243</td><td>Дмитрий Петров</td><td>Бронь</td><td>—</td><td><span class="bdg ok">Подтв.</span></td></tr></tbody></table></div>
+      <div class="adm-card"><div class="adm-card-h"><h3>Управление меню</h3><button class="btn btn-sm btn-fill" onclick="openModal('modal-menu')"><span>+ Добавить</span></button></div><table><thead><tr><th>Название</th><th>Категория</th><th>Цена</th><th>Статус</th></tr></thead><tbody><tr><td>Круассан</td><td>Выпечка</td><td>180 ₽</td><td><span class="bdg ok">Активен</span></td></tr><tr><td>Эклер ванильный</td><td>Десерты</td><td>220 ₽</td><td><span class="bdg ok">Активен</span></td></tr><tr><td>Макаронс</td><td>Десерты</td><td>650 ₽</td><td><span class="bdg ok">Активен</span></td></tr><tr><td>Сезонный тарт</td><td>Десерты</td><td>380 ₽</td><td><span class="bdg dr">Черновик</span></td></tr></tbody></table></div>
+    </main>
+  </div>
+</div>
+
+<!-- ═══ RESTAURANT DETAIL ═══ -->
+<div class="page" id="p-rest-detail">
+  <section class="rest-hero">
+    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1400&q=80" alt="My Recept Пресня">
+    <div class="rest-hero-overlay"></div>
+    <div class="rest-hero-content">
+      <div class="breadcrumb" style="color:rgba(255,255,255,.4)"><a onclick="go('home')" style="color:rgba(255,255,255,.4)">Главная</a><span class="sep">/</span><a onclick="go('restaurants')" style="color:rgba(255,255,255,.4)">Рестораны</a><span class="sep">/</span><span style="color:var(--white)">My Recept Пресня</span></div>
+      <h1 class="rest-hero-name">My Recept Пресня</h1>
+      <p class="rest-hero-loc">Москва, ул. Пресненская, 12 · Ежедневно 10:00 — 23:00</p>
+      <div class="rest-hero-btns">
+        <button class="btn btn-sm" style="border-color:#fff;color:#fff" onclick="toast('Открываем бронирование...')"><span>Забронировать</span></button>
+        <button class="btn btn-sm" style="border-color:var(--brown);color:var(--brown-lt)" onclick="toast('Переход в меню...')"><span>Смотреть меню</span></button>
+      </div>
+    </div>
+  </section>
+  <section class="rest-detail">
+    <div class="rest-detail-grid">
+      <div class="rest-info">
+        <h3>О ресторане</h3>
+        <p>My Recept Пресня — это уютное пространство в самом сердце делового центра Москвы. Здесь сочетается изысканная кондитерская традиция и современная кухня. Авторские десерты, торты на заказ и полноценное ресторанное меню — всё под одной крышей.</p>
+        <p>Идеально подходит для семейного ужина, деловой встречи или романтического свидания. Для корпоративных мероприятий доступна аренда зала.</p>
+        <div class="rest-features">
+          <div class="rest-feat"><div class="fl">Кухня</div><div class="fv">Европейская, Кондитерская</div></div>
+          <div class="rest-feat"><div class="fl">Средний чек</div><div class="fv">1 800 — 2 500 ₽</div></div>
+          <div class="rest-feat"><div class="fl">Вместимость</div><div class="fv">60 гостей</div></div>
+          <div class="rest-feat"><div class="fl">Особенности</div><div class="fv">Терраса, Wi-Fi, Парковка</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="rest-gallery-grid">
+          <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=700&q=80" alt="Интерьер">
+          <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80" alt="Блюдо">
+          <img src="https://images.unsplash.com/photo-1555507036-ab1f4038024a?w=400&q=80" alt="Выпечка">
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="rest-menu-preview">
+    <h3>Популярные позиции</h3>
+    <div class="prod-grid" style="max-width:var(--max);margin:0 auto">
+      <div class="prod-card"><div class="prod-img"><img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span></div></div><div class="prod-body"><div class="prod-name">Фисташка-Малина</div><div class="prod-desc">Фисташковый мусс с малиновым кули</div><div class="prod-bottom"><span class="prod-price">2 340 ₽</span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+      <div class="prod-card"><div class="prod-img"><img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span></div></div><div class="prod-body"><div class="prod-name">Торт «Мокко»</div><div class="prod-desc">Шоколадный бисквит с кофейным кремом</div><div class="prod-bottom"><span class="prod-price">1 700 ₽</span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+      <div class="prod-card"><div class="prod-img"><img src="https://images.unsplash.com/photo-1555507036-ab1f4038024a?w=500&q=80" alt=""><div class="prod-img-dots"><span class="on"></span><span></span></div></div><div class="prod-body"><div class="prod-name">Круассан классический</div><div class="prod-desc">Слоёное тесто, натуральное масло</div><div class="prod-bottom"><span class="prod-price">180 ₽</span><button class="add-btn" onclick="addCart(this,event)">+</button></div></div></div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══ MODALS ═══ -->
+<div class="modal-backdrop" id="modalBg" onclick="closeModal()"></div>
+
+<!-- Modal: Edit Order -->
+<div class="modal" id="modal-order">
+  <div class="modal-head"><h3>Заказ #1247</h3><button class="modal-close" onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+    <label>Клиент</label><input value="Мария Иванова">
+    <div class="modal-row">
+      <div><label>Тип заказа</label><select><option>Торт на заказ</option><option>Кулинария</option><option>Бронирование</option><option>B2B</option></select></div>
+      <div><label>Статус</label><select><option selected>Готов</option><option>В работе</option><option>Доставлен</option><option>Отменён</option></select></div>
+    </div>
+    <div class="modal-row">
+      <div><label>Сумма</label><input value="8 500 ₽"></div>
+      <div><label>Дата</label><input type="date" value="2026-03-20"></div>
+    </div>
+    <label>Комментарий</label><textarea>Торт «Мокко» 3 кг, декор — свежие ягоды, надпись «С днём рождения, Аня!»</textarea>
+  </div>
+  <div class="modal-foot"><button class="btn-cancel" onclick="closeModal()">Отмена</button><button class="btn-save" onclick="closeModal();toast('Заказ сохранён')">Сохранить</button></div>
+</div>
+
+<!-- Modal: Add/Edit Menu Item -->
+<div class="modal" id="modal-menu">
+  <div class="modal-head"><h3>Новая позиция меню</h3><button class="modal-close" onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+    <label>Название</label><input placeholder="Например: Наполеон классический">
+    <div class="modal-row">
+      <div><label>Категория</label><select><option>Десерты</option><option>Выпечка</option><option>Торты</option><option>Напитки</option></select></div>
+      <div><label>Цена</label><input placeholder="₽"></div>
+    </div>
+    <label>Описание</label><textarea placeholder="Краткое описание для карточки товара..."></textarea>
+    <div class="modal-row">
+      <div><label>Вес / Порция</label><input placeholder="100 г / 1 шт"></div>
+      <div><label>Рестораны</label><select><option>Все</option><option>Москва</option><option>СПб</option><option>Махачкала</option></select></div>
+    </div>
+    <label>Статус</label><select><option>Активен</option><option>Черновик</option><option>Скрыт</option></select>
+    <label>Фото</label>
+    <div style="border:2px dashed rgba(0,0,0,.1);border-radius:6px;padding:1.5rem;text-align:center;color:var(--gray-lt);font-size:.72rem;cursor:pointer;margin-top:.3rem;transition:border-color .3s" onmouseover="this.style.borderColor='var(--brown)'" onmouseout="this.style.borderColor='rgba(0,0,0,.1)'">
+      Перетащите фото сюда или <span style="color:var(--brown);text-decoration:underline">выберите файл</span>
+    </div>
+  </div>
+  <div class="modal-foot"><button class="btn-cancel" onclick="closeModal()">Отмена</button><button class="btn-save" onclick="closeModal();toast('Позиция добавлена')">Добавить</button></div>
+</div>
+
+<!-- Modal: Booking confirmation -->
+<div class="modal" id="modal-book">
+  <div class="modal-head"><h3>Бронирование столика</h3><button class="modal-close" onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+    <label>Ресторан</label><select><option>My Recept Пресня</option><option>My Recept Патрики</option><option>My Recept Невский</option><option>My Recept Рубинштейна</option><option>My Recept Махачкала</option><option>My Recept Каспий</option></select>
+    <div class="modal-row">
+      <div><label>Дата</label><input type="date" value="2026-03-22"></div>
+      <div><label>Время</label><select><option>18:00</option><option>18:30</option><option>19:00</option><option selected>19:30</option><option>20:00</option><option>20:30</option><option>21:00</option></select></div>
+    </div>
+    <div class="modal-row">
+      <div><label>Гостей</label><select><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5-6</option><option>7-10</option></select></div>
+      <div><label>Телефон</label><input placeholder="+7 (___) ___-__-__"></div>
+    </div>
+    <label>Имя</label><input placeholder="Ваше имя">
+    <label>Пожелания</label><textarea placeholder="Столик у окна, детский стульчик и т.д."></textarea>
+  </div>
+  <div class="modal-foot"><button class="btn-cancel" onclick="closeModal()">Отмена</button><button class="btn-save" onclick="closeModal();toast('Столик забронирован!')">Забронировать</button></div>
+</div>
+
+<!-- FOOTER -->
+<footer class="ftr" id="ft">
+<div class="ftr-grid">
+  <div class="ftr-brand">
+    <div class="ftr-logo-wrap" onclick="go('home')">
+      <svg width="90" height="50" viewBox="0 0 106 60" fill="none"><path d="M68.99 49.91C69.78 49.78 70.54 49.51 71.23 49.1L70.73 47.94 70.47 48.11C70.24 48.26 70 48.39 69.75 48.5 68.94 48.86 68.07 49.04 67.19 49.04 66.54 49.04 65.9 48.89 65.32 48.6 64.74 48.3 64.23 47.89 63.82 47.38 63.39 46.84 63.06 46.23 62.85 45.57 62.62 44.84 62.5 44.09 62.51 43.32 62.46 42.11 62.75 40.9 63.32 39.83 63.76 39.05 64.42 38.42 65.22 38.03 65.91 37.68 66.68 37.51 67.46 37.51 67.88 37.51 68.31 37.56 68.73 37.65 69.05 37.74 69.38 37.84 69.69 37.96 69.93 38.05 70.15 38.17 70.36 38.3 70.51 38.4 70.59 38.46 70.59 38.47L71.16 37.34C70.84 37.16 70.5 37.02 70.15 36.91 69.25 36.62 68.3 36.47 67.34 36.48 66.19 36.46 65.05 36.69 63.99 37.16 62.94 37.63 62.04 38.4 61.43 39.38 60.71 40.57 60.36 41.95 60.4 43.33 60.39 44.27 60.57 45.19 60.92 46.06 61.25 46.87 61.75 47.61 62.39 48.21 63.02 48.81 63.76 49.28 64.58 49.58 65.46 49.9 66.39 50.07 67.32 50.06 67.88 50.06 68.44 50.02 68.99 49.91Z" fill="rgba(255,255,255,.4)"/><path d="M12.03 36.78 7.26 47.54 3 36.78H.48L0 49.76H1.17L1.5 39.04 6.03 49.76H7.47L12.36 38.96 12.77 49.76H14.85L14.36 36.78H12.03Z" fill="rgba(255,255,255,.4)"/><path d="M23.56 49.76V43.98L27.75 36.78H26.42L23.03 42.89 19.34 36.78H16.75L21.56 44.23V49.76H23.56Z" fill="rgba(255,255,255,.4)"/><path d="M47.19 49.26C47.07 49.16 46.96 49.06 46.86 48.94 46.52 48.57 46.22 48.16 45.96 47.72 45.52 46.98 45.12 46.2 44.77 45.41 44.54 44.85 44.16 44.37 43.68 44.01 43.3 43.76 42.87 43.61 42.42 43.58 43.28 43.4 44.08 43 44.73 42.42 45.01 42.16 45.24 41.85 45.39 41.5 45.54 41.15 45.61 40.77 45.61 40.39 45.63 39.89 45.55 39.39 45.35 38.93 45.15 38.47 44.86 38.05 44.48 37.72 43.65 37.02 42.35 36.67 40.59 36.67H36.11V49.76H38.17V43.88H40.1C40.37 43.88 40.63 43.92 40.88 43.99 41.08 44.05 41.27 44.13 41.44 44.24 41.76 44.47 42.03 44.77 42.24 45.11L43.04 46.57C43.33 47.09 43.61 47.56 43.9 47.98 44.18 48.41 44.52 48.81 44.89 49.17 45.18 49.45 45.52 49.67 45.91 49.81 46.08 49.85 46.26 49.87 46.44 49.88 46.51 49.88 46.59 49.88 46.66 49.88 46.83 49.88 47.01 49.86 47.18 49.82 47.42 49.77 47.65 49.65 47.83 49.48 47.6 49.48 47.38 49.4 47.19 49.26ZM41.07 42.97C40.64 43.06 40.19 43.11 39.75 43.11H38.17V37.63H40.29C41.13 37.58 41.97 37.82 42.65 38.31 42.95 38.58 43.18 38.91 43.33 39.28 43.48 39.65 43.55 40.05 43.52 40.44 43.53 40.84 43.44 41.23 43.25 41.57 43.06 41.92 42.78 42.2 42.44 42.4 42.02 42.67 41.56 42.86 41.07 42.97Z" fill="rgba(255,255,255,.4)"/><path d="M57.98 48.76H52.12L52.1 43.38H57.22V42.43H52.1V37.79H57.91V36.78H50.01V49.76H57.98V48.76Z" fill="rgba(255,255,255,.4)"/><path d="M81.98 48.76H76.12L76.1 43.38H81.21V42.43H76.1V37.79H81.9V36.78H74V49.76H81.98V48.76Z" fill="rgba(255,255,255,.4)"/><path d="M93.42 37.83C92.95 37.43 92.4 37.13 91.81 36.96 91.06 36.74 90.28 36.63 89.49 36.65H85.31V49.77H87.41V44.18H88.67C89.45 44.19 90.23 44.11 90.99 43.95 91.93 43.8 92.82 43.4 93.56 42.8 93.88 42.52 94.14 42.17 94.31 41.78 94.49 41.39 94.57 40.96 94.56 40.54 94.56 40.04 94.47 39.54 94.29 39.07 94.1 38.6 93.8 38.17 93.42 37.83ZM92.13 41.75C91.75 42.38 91.13 42.84 90.41 43.02 89.71 43.23 88.97 43.33 88.24 43.32H87.4V37.61H89.27C90.11 37.58 90.94 37.85 91.59 38.39 91.87 38.67 92.09 39.02 92.23 39.39 92.37 39.77 92.42 40.17 92.39 40.58 92.4 40.98 92.31 41.39 92.13 41.75Z" fill="rgba(255,255,255,.4)"/><path d="M96.03 36.78V37.73H99.97V49.76H102.06V37.73H106V36.78H96.03Z" fill="rgba(255,255,255,.4)"/><path d="M44.59 22.58V27.41H61.19V22.58C62.62 21.75 63.8 20.55 64.58 19.1 66.13 16.19 65.45 13.38 62.77 11.79 61.64 11.11 60.3 10.85 58.99 11.06 58.76 10.58 58.46 10.14 58.11 9.75 56.92 8.45 55.19 7.79 52.96 7.79 50.72 7.79 48.9 8.49 47.71 9.82 47.37 10.2 47.08 10.62 46.86 11.07 45.53 10.84 44.16 11.09 43 11.79 40.32 13.38 39.63 16.19 41.19 19.1 41.98 20.55 43.16 21.75 44.59 22.58Z" fill="rgba(255,255,255,.2)"/><path d="M52.94 7.79C53.52 7.79 54.08 7.59 54.52 7.22 54.97 6.85 55.27 6.34 55.37 5.77 55.48 5.2 55.38 4.62 55.1 4.12 54.81 3.61 54.36 3.23 53.82 3.02 54.98.52 58.18 1.05 58.18 1.05 58.18 1.05 58.06 0 57.63 0 54.99 0 53.85 2.32 53.58 2.95 53.38 2.89 53.16 2.86 52.94 2.86 52.29 2.86 51.66 3.12 51.2 3.58 50.74 4.04 50.48 4.67 50.48 5.32 50.48 5.98 50.74 6.61 51.2 7.07 51.66 7.53 52.29 7.79 52.94 7.79Z" fill="rgba(255,255,255,.25)"/></svg>
+    </div>
+    <p>Ресторанная экосистема<br>и сервисы вокруг еды</p>
+  </div>
+  <div><h4>Направления</h4><ul><li><a onclick="go('restaurants')">Рестораны</a></li><li><a onclick="go('cakes')">Торты</a></li><li><a onclick="go('culinary')">Кулинария</a></li><li><a onclick="go('delivery')">Доставка</a></li></ul></div>
+  <div><h4>Информация</h4><ul><li><a onclick="go('about')">О нас</a></li><li><a>Карьера</a></li><li><a onclick="go('delivery')">Оплата</a></li><li><a>Конфиденциальность</a></li></ul></div>
+  <div><h4>Контакты</h4><ul><li><a href="tel:+79286666950">+7 (928) 666-69-50</a></li><li><a>info@myrecept.ru</a></li><li><a>Москва, СПб, Махачкала</a></li></ul></div>
+</div>
+<div class="ftr-bottom"><span>&copy; My Recept 2025. Все права защищены.</span><div class="ftr-socials"><a>IG</a><a>TG</a><a>VK</a></div></div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function go(p){
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('on'));
+  document.getElementById('p-'+p).classList.add('on');
+  window.scrollTo(0,0);
+  document.querySelectorAll('.hdr-nav a').forEach(a=>a.classList.remove('on'));
+  const n=document.getElementById('n-'+p);if(n)n.classList.add('on');
+  document.getElementById('ft').style.display=p==='admin'?'none':'';
+  if(location.hash!=='#'+p) history.pushState(null,null,'#'+p);
+  setTimeout(initRv,100);
+}
+window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(h&&document.getElementById('p-'+h))go(h)});
+window.addEventListener('DOMContentLoaded',()=>{const h=location.hash.slice(1);if(h&&document.getElementById('p-'+h))go(h)});
+window.addEventListener('scroll',()=>{document.getElementById('hdr').classList.toggle('shadow',scrollY>40)},{passive:true});
+document.getElementById('mobTog').addEventListener('click',()=>{
+  const nav=document.getElementById('mainNav');nav.classList.toggle('open');
+  const s=document.getElementById('mobTog').querySelectorAll('span');
+  if(nav.classList.contains('open')){s[0].style.transform='rotate(45deg) translate(4px,4px)';s[1].style.opacity='0';s[2].style.transform='rotate(-45deg) translate(5px,-5px)'}
+  else{s[0].style.transform='';s[1].style.opacity='';s[2].style.transform=''}
+});
+function initRv(){const o=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('vis');o.unobserve(x.target)}})},{threshold:.1,rootMargin:'0px 0px -20px 0px'});document.querySelectorAll('.rv:not(.vis)').forEach(el=>o.observe(el))}
+initRv();
+let tt;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2000)}
+function filt(b){b.parentElement.querySelectorAll('.cat-filter').forEach(x=>x.classList.remove('on'));b.classList.add('on');toast(b.textContent)}
+function addCart(b,e){e.stopPropagation();b.classList.add('done');b.textContent='✓';toast('Добавлено');setTimeout(()=>{b.classList.remove('done');b.textContent='+'},1500)}
+function pdTab(b){b.parentElement.querySelectorAll('.pd-tab').forEach(x=>x.classList.remove('on'));b.classList.add('on')}
+
+// Modals
+function openModal(id){document.getElementById('modalBg').classList.add('open');document.getElementById(id).classList.add('open');document.body.style.overflow='hidden'}
+function closeModal(){document.querySelectorAll('.modal,.modal-backdrop').forEach(m=>m.classList.remove('open'));document.body.style.overflow=''}
+
+// Restaurant detail navigation
+function goRest(){go('rest-detail')}
+</script>
+</body>
+</html>
